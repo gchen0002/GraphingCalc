@@ -14,6 +14,7 @@ void Graph::update() {
         float x = 50.0f + (i * 50.0f); 
         float y = x;                     
         _points.push_back(sf::Vector2f(x, y));
+        _points.push_back(sf::Vector2f(x+10, y));
     }
 }
 

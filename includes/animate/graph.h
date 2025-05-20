@@ -3,6 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <vector>
+using namespace std;
 class Graph {
 public:
     Graph();
@@ -10,7 +11,7 @@ public:
     void draw(sf::RenderTarget& target);
 
 private:
-    std::vector<sf::Vector2f> _points;
+    vector<sf::Vector2f> _points;
 };
 
 #endif // GRAPH_H 
