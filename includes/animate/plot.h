@@ -6,16 +6,19 @@
 #include "graph.h"
 #include "constants.h"
 #include "graph_info.h"
-#include "../linked_list_functions/linked_list_functions.h"
 #include "../shunting_yard/shunting_yard.h"
 #include "../rpn/rpn.h"
-
+#include "../queue/MyQueue.h"
 
 
 class Plot {
     public:
-        Plot(Graph_Info* info): _info(info){}
+        Plot(){}
+        Plot(Graph_Info* info);
+        void set_info(Graph_Info* new_info);
+        vector<sf::Vector2f> operator()();
     private:
+        Queue<Token*> _post_fix;
         Graph_Info* _info;
 
 };

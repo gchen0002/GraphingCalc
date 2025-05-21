@@ -2,22 +2,10 @@
 #include "constants.h"
 #include <SFML/Graphics.hpp> 
 
-Graph::Graph() {
-
+void Graph::update(int command){
+    cout << "GRAPH-UPDATe" << endl;
+    // blank for now
 }
-
-void Graph::update() {
-    _points.clear(); // Clear previous points
-
-    // Hardcode points for y = x
-    for (int i = 0; i < 10; ++i) {
-        float x = 50.0f + (i * 50.0f); 
-        float y = x;                     
-        _points.push_back(sf::Vector2f(x, y));
-        _points.push_back(sf::Vector2f(x+10, y));
-    }
-}
-
 void Graph::draw(sf::RenderTarget& target) {
     sf::CircleShape pointShape(3.0f); // Small circle for each point
     pointShape.setFillColor(sf::Color::Yellow);
@@ -27,3 +15,7 @@ void Graph::draw(sf::RenderTarget& target) {
         target.draw(pointShape);
     }
 } 
+
+void Graph::set_info(){
+    _points = Plot();
+}

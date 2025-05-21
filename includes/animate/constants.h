@@ -9,4 +9,6 @@ const float SIDE_BAR = SCREEN_WIDTH*1/5;
 const int SB_MOUSE_POSITION = 0;
 const int SB_MOUSE_CLICKED = SB_MOUSE_POSITION + 1;
 const int SB_KEY_PRESSED = SB_MOUSE_CLICKED + 1;
+
+using namespace std;
 #endif // CONSTANTS_H

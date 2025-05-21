@@ -13,9 +13,7 @@ public:
     int Size();
     void Draw(sf::RenderWindow& window);
 private:
-//    vector<Particle> system;
-    sf::CircleShape shape;
-    sf::Vector2f vel;
+    Graph_Info* _info;
     Graph _graph;
 };
 
