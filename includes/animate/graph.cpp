@@ -2,11 +2,13 @@
 #include "constants.h"
 #include <SFML/Graphics.hpp> 
 
+
 void Graph::update(int command){
     cout << "GRAPH-UPDATe" << endl;
     // blank for now
 }
 void Graph::draw(sf::RenderTarget& target) {
+    set_info();
     sf::CircleShape pointShape(3.0f); // Small circle for each point
     pointShape.setFillColor(sf::Color::Yellow);
 

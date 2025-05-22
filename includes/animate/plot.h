@@ -3,7 +3,6 @@
 
 #include <SFML/Graphics.hpp>
 #include <iostream>
-#include "graph.h"
 #include "constants.h"
 #include "graph_info.h"
 #include "../shunting_yard/shunting_yard.h"

@@ -2,7 +2,6 @@
 #define GRAPH_INFO_H
 
 #include <SFML/Graphics.hpp>
-#include "graph.h"
 #include "constants.h"
 struct Graph_Info{
         Graph_Info(){
