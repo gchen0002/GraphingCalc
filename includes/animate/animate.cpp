@@ -7,6 +7,7 @@ animate::animate()
     : font(), myTextLabel(font), sidebar(WORK_PANEL, SIDE_BAR)
 {
     cout << "animate CTOR: TOP" << endl;
+
     // SFML 3: VideoMode constructor takes sf::Vector2u or {unsigned int, unsigned int}
     window.create(sf::VideoMode({SCREEN_WIDTH, SCREEN_HEIGHT}), "SFML window!");
     // VideoMode class has functions to detect screen size etc.

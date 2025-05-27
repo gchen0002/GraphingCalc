@@ -5,10 +5,13 @@
 
 void Graph::update(int command){
     cout << "GRAPH-UPDATe" << endl;
+    //get updated points from plot
+    _points = Plot();
     // blank for now
 }
 void Graph::draw(sf::RenderTarget& target) {
-    set_info();
+    cout << "ENTERNING GRAPH GDRAW" << endl;
+    // set_info();
 
     // 2 points for each axis
     sf::VertexArray grid_axis(sf::PrimitiveType::Lines, 4);
@@ -37,8 +40,9 @@ void Graph::draw(sf::RenderTarget& target) {
         pointShape.setPosition(point); // Set position for each point
         target.draw(pointShape);
     }
+    cout << "ENTERNING GRAPH GDRAW" << endl;
 } 
 
 void Graph::set_info(){
-    _points = Plot(); 
+    cout << "exiting plot()" << endl;
 }

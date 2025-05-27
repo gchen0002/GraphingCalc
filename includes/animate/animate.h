@@ -22,7 +22,7 @@ private:
     sf::Text myTextLabel;               //text to draw on main screen
     bool mouseIn;                       //mouse is in the screen
     Sidebar sidebar;                    //rectangular message sidebar
-
+    Graph_Info graph_info;
 };
 
 std::string mouse_pos_string(sf::RenderWindow& window);

@@ -8,8 +8,14 @@
 using namespace std;
 class Graph {
 public:
-    Graph(){}
-    Graph(Graph_Info* info): _info(info){}
+    Graph(){
+        //
+    }
+    Graph(Graph_Info* info): _info(info){
+        //initialize your _poinnts vector from plot
+        _points = Plot(); 
+        //after storing _info DONE
+    }
     void update(int command);
     void draw(sf::RenderTarget& target);
     void set_info();

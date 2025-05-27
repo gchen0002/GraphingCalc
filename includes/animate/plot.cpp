@@ -8,23 +8,29 @@
 
 // converts string to infix Queue<Token*>
 // needs to handle spaces, digits, and operators later
-Queue<Token*> tokenizeExpression(const std::string& equation) {
+Queue<Token*> tokenizeExpression(const string& equation) {
     Queue<Token*> infix_queue;
-    for (size_t i = 0; i < equation.length(); ++i) {
+    cout << "entering tokenize" << endl;
+    cout << equation << "123123123" << endl;
+    for (int i = 0; i < equation.length(); i++) {
         char c = equation[i];
-
+        cout << "looping" << endl;
         if (isspace(c)) { // skip spaces
             continue;
+            cout << "skipping spaces";
         }
 
         if (isdigit(c)) {
-            infix_queue.push(new Integer(c)); 
+            infix_queue.push(new Integer(c));
+            cout << "isdigit" << endl; 
         }
         // operator case
         else if (c == '+' || c == '-' || c == '*' || c == '/') {
             infix_queue.push(new Operator(string(1, c))); 
-        }
+            cout << "operators" << endl;
+        } else continue;
     }
+    cout << "TOKENIZE SUCCCESFFUL" << endl;
     return infix_queue;
 }
 
@@ -33,35 +39,28 @@ void Plot::set_info(Graph_Info* new_info) {
 }
 
 
-std::vector<sf::Vector2f> Plot::operator()() {
-    std::vector<sf::Vector2f> plot_points;
-
+vector<sf::Vector2f> Plot::operator()() {
+    vector<sf::Vector2f> plot_points;
+    // tokenize the equation
     Queue<Token*> infix_q = tokenizeExpression(_info->_equation);
     
-
+    // shuntingyard and rpn
     ShuntingYard sy;
     Queue<Token*> postfix = sy.postfix(infix_q);   
-
+    cout << "shunting yard success" << endl;
     RPN rpn(postfix);  
-
+    cout << "rpn success" << endl;
     // domain
-    sf::Vector2f plot_domain = _info->_domain;
-    sf::Vector2f old_domain = plot_domain;
+    sf::Vector2f domain = _info->_domain;
 
-
-    //map cartesian to screen size
-    int scale_factor = WORK_PANEL / (plot_domain.y - plot_domain.x);
-
-
-    for (float x = plot_domain.x ; x <= plot_domain.y; x += 0.003f) {
-        sf::Vector2f point(x * scale_factor, rpn(x) * scale_factor);
-        plot_points.push_back(cartToSFML(point));
+    float x = rpn();
+    float y = x;
+    for(int i = 0; i < _info->_points; i++){
+        float x = rpn() + i;
+        float y = x;
+        plot_points.push_back(sf::Vector2f(x, y));
     }
-
+    cout << "points success" << endl;
     return plot_points;
 }
 
-sf::Vector2f Plot::cartToSFML(sf::Vector2f cartesian){
-    // convert cartesian coordinate to SFML
-    return sf::Vector2f(cartesian.x + WORK_PANEL / 2, SCREEN_HEIGHT / 2 - cartesian.y);
-}
