@@ -40,5 +40,5 @@ void Graph::draw(sf::RenderTarget& target) {
 } 
 
 void Graph::set_info(){
-    _points = Plot.operator()(); 
+    _points = Plot(); 
 }

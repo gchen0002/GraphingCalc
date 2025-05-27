@@ -3,19 +3,18 @@
 
 #include <SFML/Graphics.hpp>
 #include <iostream>
-#include "constants.h"
 #include "graph_info.h"
 #include "../shunting_yard/shunting_yard.h"
 #include "../rpn/rpn.h"
-#include "../queue/MyQueue.h"
-
+#include "../token/token.h"
 
 class Plot {
     public:
         Plot(){}
-        Plot(Graph_Info* info);
+        Plot(Graph_Info* info): _info(info){}
         void set_info(Graph_Info* new_info);
         vector<sf::Vector2f> operator()();
+        sf::Vector2f cartToSFML(sf::Vector2f cartesian);
     private:
         Queue<Token*> _post_fix;
         Graph_Info* _info;
