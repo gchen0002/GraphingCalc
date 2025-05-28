@@ -14,6 +14,7 @@ class Plot {
         Plot(Graph_Info* info): _info(info){}
         void set_info(Graph_Info* new_info);
         vector<sf::Vector2f> operator()();
+        sf::Vector2f translate(sf::Vector2f rpnNum);
     private:
         Queue<Token*> _post_fix;
         Graph_Info* _info;

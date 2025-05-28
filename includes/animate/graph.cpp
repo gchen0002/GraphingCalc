@@ -4,13 +4,13 @@
 
 
 void Graph::update(int command){
-    cout << "GRAPH-UPDATe" << endl;
+    // cout << "GRAPH-UPDATe" << endl;
     //get updated points from plot
     _points = _plotter();
     // blank for now
 }
 void Graph::draw(sf::RenderTarget& target) {
-    cout << "ENTERNING GRAPH GDRAW" << endl;
+    // cout << "ENTERNING GRAPH GDRAW" << endl;
     // set_info();
 
     // 2 points for each axis
@@ -40,9 +40,9 @@ void Graph::draw(sf::RenderTarget& target) {
         pointShape.setPosition(point); // Set position for each point
         target.draw(pointShape);
     }
-    cout << "ENTERNING GRAPH GDRAW" << endl;
+    // cout << "ENTERNING GRAPH GDRAW" << endl;
 } 
 
 void Graph::set_info(){
-    cout << "exiting plot()" << endl;
+    // cout << "exiting plot()" << endl;
 }
