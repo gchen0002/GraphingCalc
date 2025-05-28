@@ -9,6 +9,7 @@ class System
 {
 public:
     System();
+    System(Graph_Info* info): _info(info), _graph(info) {}
     void Step(int command);
     int Size();
     void Draw(sf::RenderWindow& window);

@@ -11,9 +11,9 @@ public:
     Graph(){
         //
     }
-    Graph(Graph_Info* info): _info(info){
+    Graph(Graph_Info* info): _info(info), _plotter(info){
         //initialize your _poinnts vector from plot
-        _points = Plot(); 
+        _points = _plotter(); 
         //after storing _info DONE
     }
     void update(int command);
@@ -22,7 +22,7 @@ public:
 private:
     Graph_Info* _info;
     vector<sf::Vector2f> _points;
-    Plot Plot;
+    Plot _plotter;
 };
 
 #endif // GRAPH_H 

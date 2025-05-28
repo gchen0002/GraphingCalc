@@ -4,10 +4,10 @@
 #include "system.h"
 
 animate::animate()
-    : font(), myTextLabel(font), sidebar(WORK_PANEL, SIDE_BAR)
+    : font(), myTextLabel(font), sidebar(WORK_PANEL, SIDE_BAR), graph_info(new Graph_Info())
 {
     cout << "animate CTOR: TOP" << endl;
-
+    system = System(graph_info);
     // SFML 3: VideoMode constructor takes sf::Vector2u or {unsigned int, unsigned int}
     window.create(sf::VideoMode({SCREEN_WIDTH, SCREEN_HEIGHT}), "SFML window!");
     // VideoMode class has functions to detect screen size etc.

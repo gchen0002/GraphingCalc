@@ -6,7 +6,7 @@
 void Graph::update(int command){
     cout << "GRAPH-UPDATe" << endl;
     //get updated points from plot
-    _points = Plot();
+    _points = _plotter();
     // blank for now
 }
 void Graph::draw(sf::RenderTarget& target) {
