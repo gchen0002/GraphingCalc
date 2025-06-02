@@ -6,10 +6,10 @@
 struct Graph_Info{
         Graph_Info(){
             _window_dimensions = sf::Vector2f(SCREEN_WIDTH, SCREEN_HEIGHT);
-            _equation = "y = 5x";
+            _equation = "y = 5*x";
             _scale = sf::Vector2f(5, 5);
             _domain = sf::Vector2f(-5,5);
-            _points = 11;
+            _points = 110;
         }
         string _equation;
         sf::Vector2f _window_dimensions, _scale, _domain;

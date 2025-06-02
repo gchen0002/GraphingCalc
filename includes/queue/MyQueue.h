@@ -2,7 +2,6 @@
 #define CHEN_MYQUEUE_H
 
 #include "../linked_list_functions/linked_list_functions.h"
-
 template <typename T>
 class Queue
 {

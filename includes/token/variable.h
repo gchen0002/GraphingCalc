@@ -12,18 +12,16 @@ class Variable : public Token
 {
 public:
     Variable() : Token(5) {}
-    // virtual void Print(ostream& outs);
-    Variable(const string& var = "X") : Token(5), _variable(var) {}
-    void Print(ostream& outs)
-    {
+    Variable(const std::string& var = "x") : Token(5), _variable(var) {}
+    void print(std::ostream& outs = std::cout) const override {
         outs << _variable;
     }
     
-    int type() const { return Token::type(); }
-    string get_variable() const { return _variable; }
+    int type() const override { return Token::type(); }
+    std::string get_variable() const { return _variable; }
 
 private:
-    string _variable = "x";
+    std::string _variable = "x";
 
 
 };

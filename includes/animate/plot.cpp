@@ -50,45 +50,34 @@ vector<sf::Vector2f> Plot::operator()() {
     // shuntingyard and rpn
     ShuntingYard sy;
     Queue<Token*> postfix_q = sy.postfix(infix_q);   
-
-    
     RPN rpn(postfix_q);  
 
+    // calculate visible x-range directly
+    float visible_width = WORK_PANEL / _info->_scale.x;  // how much math we can see horizontally
+    float start_x = _info->_domain.x - visible_width / 2;  // leftmost x value
+    float end_x = _info->_domain.x + visible_width / 2;    // rightmost x value
+    float step_size = visible_width / (_info->_points - 1); // x increment per point
 
-    float domain_x = _info->_domain.x;
-    float scale_x = _info->_scale.x;
-
-    
-    // x-range visible on the WORK_PANEL
-    float math_x_min = (WORK_PANEL / 2.0f - domain_x) / scale_x;
-    float math_x_max = (WORK_PANEL / 2.0f + domain_x) / scale_x;
-
+    // Generate points 
     for (int i = 0; i < _info->_points; i++) {
-        float current_math_x;
-
-        current_math_x = math_x_min + static_cast<float>(i) * (math_x_max - math_x_min) / static_cast<float>(_info->_points - 1);
-
-        float math_y = rpn(current_math_x);
-
-        sf::Vector2f screen_point = translate(sf::Vector2f(current_math_x, math_y));
-        plot_points.push_back(screen_point);
+        float x = start_x + i * step_size;
+        float y = rpn(x);
+        plot_points.push_back(translate(sf::Vector2f(x, y)));
     }
     
     return plot_points;
 }
 
-sf::Vector2f Plot::translate(sf::Vector2f raw){
-    // scale
-    sf::Vector2f scale = _info->_scale;
-    raw.x *= scale.x;
-    raw.y *= scale.y;
-    // domain
-    sf::Vector2f domain = _info->_domain;
-    raw.x += domain.x;
-    raw.y -= domain.y;
-    // translate
-    sf::Vector2f ans(raw.x + WORK_PANEL/2, SCREEN_HEIGHT/2 - raw.y);
-    return ans;
+sf::Vector2f Plot::translate(sf::Vector2f math_point) {
+    // Center the graph at middle of work panel
+    float center_x = WORK_PANEL / 2.0f;
+    float center_y = SCREEN_HEIGHT / 2.0f;
+    
+    // Simple offset calculation from center
+    float offset_x = (math_point.x - _info->_domain.x) * _info->_scale.x;
+    float offset_y = (math_point.y - _info->_domain.y) * _info->_scale.y;
+    
+    return sf::Vector2f(center_x + offset_x, center_y - offset_y);  // flip y for screen coords
 }
 
 
