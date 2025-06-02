@@ -1,4 +1,7 @@
 #include "rpn.h"
+#include "../token/integer.h"
+#include "../token/operator.h"
+#include "../token/variable.h"
 #include <cassert>   
 #include <iostream> 
 #include <cmath>     
@@ -12,86 +15,64 @@ void RPN::set_input(const Queue<Token*>& postfix_q) {
     _postfix_q = postfix_q;
 }
 
-
 double RPN::operator()(double x_val) {
     // assert for preconditions
     assert(!_postfix_q.empty() && "RPN Error: Input queue is empty.");
 
+    MyStack<double> eval_stack;
 
-    MyStack<double> eval_stack; 
 
-
-    Queue<Token*>::Iterator it = _postfix_q.begin(); // Iterate through the member queue
-    while(it != _postfix_q.end()){
+    // Iterate over postfix queue
+    for (Queue<Token*>::Iterator it = _postfix_q.begin(); it != _postfix_q.end(); it++) {
         Token* current_token = *it;
 
-        // handle integers
-        if (current_token->type() == 1) { // Integer type
-             Integer* num_ptr = static_cast<Integer*>(current_token);
-             eval_stack.push(static_cast<double>(num_ptr->getValue()));
 
-        // handle operators
-        } else if (current_token->type() == 2) { // Operator type
+        if (current_token->type() == 1) { // Integer type
+            Integer* num_ptr = static_cast<Integer*>(current_token);
+            eval_stack.push(static_cast<double>(num_ptr->getValue()));
+            // cout << "Pushed number: " << num_ptr->getValue() << endl;
+        } 
+        else if (current_token->type() == 2) { // Operator type
             Operator* op_ptr = static_cast<Operator*>(current_token);
             string op_sym = op_ptr->getOp();
 
-            // check if there are enough operands using assert
-            assert(eval_stack.size() >= 2 && "RPN Error: Insufficient operands for operator.");
+            if (eval_stack.size() < 2) {
+                assert(false && "RPN Error: Insufficient operands for operator.");
+            }
             
-
-            // Pop the right operand first, then the left
             double right_operand = eval_stack.pop();
             double left_operand = eval_stack.pop();
             double result = 0.0;
-            bool operator_found = false; // Flag to check if operator was valid
 
-            // Perform the calculation based on the operator symbol
-            if (op_sym == "+") {
-                result = left_operand + right_operand;
-                operator_found = true;
-            } else if (op_sym == "-") {
-                result = left_operand - right_operand;
-                operator_found = true;
-            } else if (op_sym == "*") {
-                result = left_operand * right_operand;
-                 operator_found = true;
-            } else if (op_sym == "/") {
-                // Check for division by zero using assert
-                 assert(std::abs(right_operand) >= 1e-10 && "RPN Error: Division by zero.");
+            if (op_sym == "+") result = left_operand + right_operand;
+            else if (op_sym == "-") result = left_operand - right_operand;
+            else if (op_sym == "*") result = left_operand * right_operand;
+            else if (op_sym == "/") {
+                if (std::abs(right_operand) < 1e-9) {  // check for division by zero
+                    assert(false && "RPN Error: Division by zero.");
+                }
                 result = left_operand / right_operand;
-                 operator_found = true;
+            } else if (op_sym == "^") {
+                result = std::pow(left_operand, right_operand);
+            } else {
+                assert(false && "RPN Error: Unknown or unsupported operator.");
             }
-
-            // Assert that a known operator was handled
-            assert(operator_found && "RPN Error: Unknown or unsupported operator.");
-
-
-            // Push the result back onto the stack
             eval_stack.push(result);
-
-        // handle functions/variables (e.g., 'X')
-        } else if (current_token->type() == 5) { // Function/Variable type
-            Function* func_ptr = static_cast<Function*>(current_token);
-
-            if (func_ptr->getName() == "X") {
+        } else if (current_token->type() == 5) { // Variable type ('x')
+            Variable* var_ptr = static_cast<Variable*>(current_token);
+            if (var_ptr->get_variable() == "x" || var_ptr->get_variable() == "X") { 
                 eval_stack.push(x_val);
             } else {
-                assert(false && "RPN Error: Unknown function/variable name encountered.");
+                assert(false && "RPN Error: Unknown variable name.");
             }
-
-        // handle unknown token types
-        } else {
-             // assert failure for unexpected token types in postfix
-             assert(false && "RPN Error: Unexpected token type encountered in postfix queue.");
+        } else { // Catches any other token type need to implement trig functions later
+            assert(false && "RPN Error: Unexpected token type encountered in postfix queue.");
         }
-
-        it++; // Move to the next token
+    }
+    // invalid postfix expression
+    if (eval_stack.size() != 1) {
+        assert(false && "RPN Error: Invalid postfix expression. Stack did not end with 1 value.");
     }
 
-    // after processing all tokens, assert that the final result is the only item on the stack
-    assert(eval_stack.size() == 1 && "RPN Error: Invalid postfix expression. Stack did not end with 1 value.");
-
-
-    // return the final result
     return eval_stack.top();
 } 

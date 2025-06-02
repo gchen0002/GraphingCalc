@@ -7,7 +7,7 @@
 
 
 // converts string to infix Queue<Token*>
-// needs to handle spaces, digits, and operators later
+// needs to handle variables, trig later
 Queue<Token*> tokenizeExpression(const string& equation) {
     Queue<Token*> infix_queue;
     // cout << "entering tokenize" << endl;
@@ -28,7 +28,10 @@ Queue<Token*> tokenizeExpression(const string& equation) {
         else if (c == '+' || c == '-' || c == '*' || c == '/') {
             infix_queue.push(new Operator(string(1, c))); 
             // cout << "operators" << endl;
-        } else continue;
+        } else if (c == 'x') { // variable 'x'
+            infix_queue.push(new Variable(string(1, c)));
+        }
+
     }
     // cout << "TOKENIZE SUCCCESFFUL" << endl;
     return infix_queue;
@@ -46,21 +49,31 @@ vector<sf::Vector2f> Plot::operator()() {
     
     // shuntingyard and rpn
     ShuntingYard sy;
-    Queue<Token*> postfix = sy.postfix(infix_q);   
-    // cout << "shunting yard success" << endl;
-    RPN rpn(postfix);  
-    // cout << "rpn success" << endl;
+    Queue<Token*> postfix_q = sy.postfix(infix_q);   
 
     
-    float x = 0;
-    float y = rpn();
-    for(int i = 0; i < _info->_points; i++){
-        x = 10.0f * i;
-        sf::Vector2f translated = translate(sf::Vector2f(x,y));
-        // cout << translated.x << " " << translated.y << endl;
-        plot_points.push_back(translated);
+    RPN rpn(postfix_q);  
+
+
+    float domain_x = _info->_domain.x;
+    float scale_x = _info->_scale.x;
+
+    
+    // x-range visible on the WORK_PANEL
+    float math_x_min = (WORK_PANEL / 2.0f - domain_x) / scale_x;
+    float math_x_max = (WORK_PANEL / 2.0f + domain_x) / scale_x;
+
+    for (int i = 0; i < _info->_points; i++) {
+        float current_math_x;
+
+        current_math_x = math_x_min + static_cast<float>(i) * (math_x_max - math_x_min) / static_cast<float>(_info->_points - 1);
+
+        float math_y = rpn(current_math_x);
+
+        sf::Vector2f screen_point = translate(sf::Vector2f(current_math_x, math_y));
+        plot_points.push_back(screen_point);
     }
-    // cout << "points success" << endl;
+    
     return plot_points;
 }
 
@@ -71,7 +84,9 @@ sf::Vector2f Plot::translate(sf::Vector2f raw){
     raw.y *= scale.y;
     // domain
     sf::Vector2f domain = _info->_domain;
-
+    raw.x += domain.x;
+    raw.y -= domain.y;
+    // translate
     sf::Vector2f ans(raw.x + WORK_PANEL/2, SCREEN_HEIGHT/2 - raw.y);
     return ans;
 }

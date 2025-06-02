@@ -16,14 +16,14 @@ public:
     Variable(const string& var = "X") : Token(5), _variable(var) {}
     void Print(ostream& outs)
     {
-        outs << _variable << endl;
+        outs << _variable;
     }
     
-    void type() { }
-    string getValue() { return _variable; }
+    int type() const { return Token::type(); }
+    string get_variable() const { return _variable; }
 
 private:
-    string _variable = "X";
+    string _variable = "x";
 
 
 };

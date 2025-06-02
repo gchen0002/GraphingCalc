@@ -6,7 +6,7 @@ using namespace std;
 
 class Token{
 private:
-    int _type; // 1 for Number, 2 for Operator, 3 for left parenthesis, 4 for right parenthesis
+    int _type; // 1 for Number, 2 for Operator, 3 for left parenthesis, 4 for right parenthesis, 5 for Variable, 6 for Function
 
 public:
     // Constructor 

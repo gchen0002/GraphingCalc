@@ -12,8 +12,8 @@ private:
     string _name; // To store "X" or function names like "sin", "cos"
 
 public:
-    // Constructor: Type 5 for Function
-    Function(const string& name) : Token(5), _name(name) {}
+    // Constructor: Type 6 for Function
+    Function(const string& name) : Token(6), _name(name) {}
 
     // Override print method
     void print(ostream& outs = cout) const override {
@@ -24,6 +24,7 @@ public:
     string getName() const {
         return _name;
     }
+    int type() const { return Token::type(); } 
 
 
 };

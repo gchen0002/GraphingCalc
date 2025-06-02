@@ -1,13 +1,12 @@
 #ifndef CHEN_RPN_H
 #define CHEN_RPN_H
-
-
 #include "../queue/MyQueue.h" 
 #include "../stack/MyStack.h" 
 #include "../token/token.h"
 #include "../token/integer.h" 
 #include "../token/operator.h" 
 #include "../token/function.h"
+#include "../token/variable.h"
 #include <stdexcept> 
 #include <string>    
 #include <vector>    

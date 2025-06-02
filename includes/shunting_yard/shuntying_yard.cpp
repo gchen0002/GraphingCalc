@@ -1,5 +1,8 @@
 #include "shunting_yard.h"
 #include "../token/operator.h"
+#include "../token/integer.h" 
+#include "../token/variable.h" 
+
 
 ShuntingYard::ShuntingYard() {}
 
@@ -14,47 +17,37 @@ Queue<Token*> ShuntingYard::postfix() {
 }
 
 Queue<Token*> ShuntingYard::postfix(const Queue<Token*>& infix_q) {
-    Queue<Token*> output;
-    MyStack<Token*> operators;
+    Queue<Token*> output_queue;
+    MyStack<Token*> operator_stack;
 
     for (Queue<Token*>::Iterator it = infix_q.begin(); it != infix_q.end(); it++) {
         Token* token = *it;
         
         if (token->type() == 1) { // Integer
-            output.push(token);
-        }
+            output_queue.push(token);
+        } 
+        else if (token->type() == 5) { // Variable 
+            output_queue.push(token);
+        } 
         else if (token->type() == 2) { // Operator
-            Operator* op = static_cast<Operator*>(token);
-            while (!operators.empty() && operators.top()->type() == 2) {
-                Operator* top_op = static_cast<Operator*>(operators.top());
-                if (top_op->precedence() >= op->precedence()) {
-                    output.push(operators.pop());
+            Operator* current_op = static_cast<Operator*>(token);
+            while (!operator_stack.empty() && operator_stack.top()->type() == 2) {
+                Operator* top_op = static_cast<Operator*>(operator_stack.top());
+                if (top_op->precedence() >= current_op->precedence()) { // precedence check
+                    output_queue.push(operator_stack.pop());
                 } else {
                     break;
                 }
             }
-            operators.push(token);
-        }
-        else if (token->type() == 3) { // Left Parenthesis
-            operators.push(token);
-        }
-        else if (token->type() == 4) { // Right Parenthesis
-            while (!operators.empty() && operators.top()->type() != 3) {
-                output.push(operators.pop());
-            }
-            if (!operators.empty() && operators.top()->type() == 3) {
-                operators.pop(); // Remove left parenthesis
-            }
-        }
-        else if (token->type() == 5) { // Function/Variable
-            output.push(token);
+            operator_stack.push(token);
         }
     }
-
-    // Pop remaining operators
-    while (!operators.empty()) {
-        output.push(operators.pop());
+    // clean up stack for left over operators
+    while (!operator_stack.empty()) {
+        Token* token_on_stack = operator_stack.top();
+        assert(token_on_stack->type() == 2 && "ShuntingYard Error: Expected only operators on stack at the end.");
+        output_queue.push(operator_stack.pop());
     }
 
-    return output;
+    return output_queue;
 } 
