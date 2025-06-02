@@ -56,7 +56,7 @@ vector<sf::Vector2f> Plot::operator()() {
     float visible_width = WORK_PANEL / _info->_scale.x;  // how much math we can see horizontally
     float start_x = _info->_domain.x - visible_width / 2;  // leftmost x value
     float end_x = _info->_domain.x + visible_width / 2;    // rightmost x value
-    float step_size = visible_width / (_info->_points - 1); // x increment per point
+    float step_size = visible_width / (_info->_points); // x increment per point
 
     // Generate points 
     for (int i = 0; i < _info->_points; i++) {
@@ -73,11 +73,11 @@ sf::Vector2f Plot::translate(sf::Vector2f math_point) {
     float center_x = WORK_PANEL / 2.0f;
     float center_y = SCREEN_HEIGHT / 2.0f;
     
-    // Simple offset calculation from center
+    // offset calculation from center
     float offset_x = (math_point.x - _info->_domain.x) * _info->_scale.x;
     float offset_y = (math_point.y - _info->_domain.y) * _info->_scale.y;
     
-    return sf::Vector2f(center_x + offset_x, center_y - offset_y);  // flip y for screen coords
+    return sf::Vector2f(center_x-offset_y, center_y-offset_x);  // flip y for screen coords
 }
 
 

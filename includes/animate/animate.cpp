@@ -46,7 +46,8 @@ animate::animate()
 
     // myTextLabel is already constructed with font. now set its properties.
     // myTextLabel = sf::Text("Initial String for myTextLabel", font); // This was assignment + wrong constructor
-    myTextLabel.setString("Initial String for myTextLabel");
+    string text = "Domain = " + to_string(graph_info->_domain.x) + ", " + to_string(graph_info->_domain.y);
+    myTextLabel.setString(text);
     // myTextLabel.setFont(font); // Redundant, already constructed with font
     myTextLabel.setCharacterSize(20);
     myTextLabel.setStyle(sf::Text::Style::Bold); // SFML 3: sf::Text::Style::Bold
@@ -73,6 +74,8 @@ void animate::Draw()
 
     // drawing Test: . . . . . . . . . . . .
     // This is how you draw text:)
+    string text = "Domain = " + to_string(graph_info->_domain.x) + ", " + to_string(graph_info->_domain.y);
+    myTextLabel.setString(text);
     window.draw(myTextLabel);
     //. . . . . . . . . . . . . . . . . . .
 }
@@ -119,13 +122,21 @@ void animate::processEvents()
         {
             switch (keyPressed->code)
             {
+            case sf::Keyboard::Key::Subtract:
+                sidebar[SB_KEY_PRESSED] = "SUBTRACT";
+                command = 5;
+                break;
+            case sf::Keyboard::Key::Equal:
+                sidebar[SB_KEY_PRESSED] = "ADD";
+                command = 6;
+                break;
             case sf::Keyboard::Key::Left: // SFML 3: sf::Keyboard::Key::Left
                 sidebar[SB_KEY_PRESSED] = "LEFT ARROW";
-                command = 4;
+                command = 3;
                 break;
             case sf::Keyboard::Key::Right: // SFML 3: sf::Keyboard::Key::Right
                 sidebar[SB_KEY_PRESSED] = "RIGHT ARROW";
-                command = 6;
+                command = 4;
                 break;
             case sf::Keyboard::Key::Escape: // SFML 3: sf::Keyboard::Key::Escape
                 sidebar[SB_KEY_PRESSED] = "ESC: EXIT";
