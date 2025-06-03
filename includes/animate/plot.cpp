@@ -52,16 +52,16 @@ vector<sf::Vector2f> Plot::operator()() {
     Queue<Token*> postfix_q = sy.postfix(infix_q);   
     RPN rpn(postfix_q);  
 
-    float xmin_math = _info->_domain.x;
-    float xmax_math = _info->_domain.y;
+    float xmin = _info->_domain.x;
+    float xmax = _info->_domain.y;
     
     int num_points = _info->_points;
 
     // increment
-    float increment = (xmax_math - xmin_math) / (num_points);
+    float increment = (xmax - xmin) / (num_points);
 
     for (int i = 0; i < num_points; i++) {
-        float x = xmin_math + i * increment;
+        float x = xmin + i * increment;
         float y = rpn(x);
         plot_points.push_back(translate(sf::Vector2f(x, y)));
     }
@@ -90,8 +90,6 @@ sf::Vector2f Plot::translate(sf::Vector2f raw) {
 
 sf::VertexArray Plot::plotAxis(){
     // x-axis and y-axis
-    float x_axis_y_position = SCREEN_HEIGHT / 2.0f;
-    float y_axis_x_position = WORK_PANEL / 2.0f;
     sf::Vector2f translated = translate(sf::Vector2f(0, 0));
     // 2 points for each axis
     sf::VertexArray grid_axis(sf::PrimitiveType::Lines, 4);

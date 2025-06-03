@@ -9,7 +9,7 @@ using namespace std;
 
 class Function : public Token {
 private:
-    string _name; // To store "X" or function names like "sin", "cos"
+    string _name; // function names like "sin", "cos"
 
 public:
     // Constructor: Type 6 for Function

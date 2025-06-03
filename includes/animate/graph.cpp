@@ -8,13 +8,13 @@ void Graph::update(int command){
 
     // zooming in 
     if(command == 5){
-        _info->_domain.x += 2.0f;
-        _info->_domain.y -= 2.0f;
+        _info->_domain.x /= 2.0f;
+        _info->_domain.y /= 2.0f;
     }
     // zooming out 
     if(command == 6){
-        _info->_domain.x -= 2.0f;
-        _info->_domain.y += 2.0f;
+        _info->_domain.x *= 2.0f;
+        _info->_domain.y *= 2.0f;
     }
     // panning to the left
     else if(command == 3){
