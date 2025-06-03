@@ -52,15 +52,16 @@ vector<sf::Vector2f> Plot::operator()() {
     Queue<Token*> postfix_q = sy.postfix(infix_q);   
     RPN rpn(postfix_q);  
 
-    // calculate visible x-range directly
-    float visible_width = WORK_PANEL / _info->_scale.x;  // how much math we can see horizontally
-    float start_x = _info->_domain.x - visible_width / 2;  // leftmost x value
-    float end_x = _info->_domain.x + visible_width / 2;    // rightmost x value
-    float step_size = visible_width / (_info->_points); // x increment per point
+    float xmin_math = _info->_domain.x;
+    float xmax_math = _info->_domain.y;
+    
+    int num_points = _info->_points;
 
-    // Generate points 
-    for (int i = 0; i < _info->_points; i++) {
-        float x = start_x + i * step_size;
+    // increment
+    float increment = (xmax_math - xmin_math) / (num_points);
+
+    for (int i = 0; i < num_points; i++) {
+        float x = xmin_math + i * increment;
         float y = rpn(x);
         plot_points.push_back(translate(sf::Vector2f(x, y)));
     }
@@ -68,16 +69,23 @@ vector<sf::Vector2f> Plot::operator()() {
     return plot_points;
 }
 
-sf::Vector2f Plot::translate(sf::Vector2f math_point) {
-    // Center the graph at middle of work panel
-    float center_x = WORK_PANEL / 2.0f;
-    float center_y = SCREEN_HEIGHT / 2.0f;
-    
-    // offset calculation from center
-    float offset_x = (math_point.x - _info->_domain.x) * _info->_scale.x;
-    float offset_y = (math_point.y - _info->_domain.y) * _info->_scale.y;
-    
-    return sf::Vector2f(center_x-offset_y, center_y-offset_x);  // flip y for screen coords
+sf::Vector2f Plot::translate(sf::Vector2f raw) {
+    // screen dimensions
+    sf::Vector2f screen_dimensions = sf::Vector2f(WORK_PANEL/2, SCREEN_HEIGHT/2);
+    // graph origin
+    double origin_x = (_info->_domain.y + _info->_domain.x) / 2;
+    double origin_y = 0;
+    sf::Vector2f graph_origin = sf::Vector2f(origin_x, origin_y);
+
+    // increment
+    double graph_increment = (_info->_domain.y - _info->_domain.x) / (_info->_points);
+    double x_increment = WORK_PANEL / (_info->_points);
+    double y_increment = SCREEN_HEIGHT / (_info->_points);
+
+    // screen_x = screen_origin + graph distance from origin * graduation
+    double screen_x = screen_dimensions.x + ((raw.x - graph_origin.x) / graph_increment) * x_increment;
+    double screen_y = screen_dimensions.y + ((graph_origin.y - raw.y) / graph_increment) * y_increment;
+    return sf::Vector2f(screen_x, screen_y);
 }
 
 

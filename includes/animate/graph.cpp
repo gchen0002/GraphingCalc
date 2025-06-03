@@ -8,19 +8,23 @@ void Graph::update(int command){
 
     // zooming in 
     if(command == 5){
-        _info->_domain = sf::Vector2f(_info->_domain.x+2.0f, _info->_domain.y-2.0f);
+        _info->_domain.x += 2.0f;
+        _info->_domain.y -= 2.0f;
     }
     // zooming out 
     if(command == 6){
-        _info->_domain = sf::Vector2f(_info->_domain.x-2.0f, _info->_domain.y+2.0f);
+        _info->_domain.x -= 2.0f;
+        _info->_domain.y += 2.0f;
     }
     // panning to the left
     else if(command == 3){
-        _info->_domain = sf::Vector2f(_info->_domain.x-0.25f, _info->_domain.y-0.25f);
+        _info->_domain.x -= 0.25f;
+        _info->_domain.y -= 0.25f;
     }
     // panning to the right
     else if(command == 4){
-        _info->_domain = sf::Vector2f(_info->_domain.x+0.25f, _info->_domain.x+0.25f);
+        _info->_domain.x += 0.25f;
+        _info->_domain.y += 0.25f;
     }
     //get updated points from plot
     _points = _plotter();

@@ -122,8 +122,8 @@ void animate::processEvents()
         {
             switch (keyPressed->code)
             {
-            case sf::Keyboard::Key::Subtract:
-                sidebar[SB_KEY_PRESSED] = "SUBTRACT";
+            case sf::Keyboard::Key::Hyphen:
+                sidebar[SB_KEY_PRESSED] = "HYPHEN";
                 command = 5;
                 break;
             case sf::Keyboard::Key::Equal:
