@@ -82,10 +82,34 @@ sf::Vector2f Plot::translate(sf::Vector2f raw) {
     double x_increment = WORK_PANEL / (_info->_points);
     double y_increment = SCREEN_HEIGHT / (_info->_points);
 
-    // screen_x = screen_origin + graph distance from origin * graduation
+    // screen coords = x/y + ((difference of x/y of the graph_origin) / increment) * x/y increment
     double screen_x = screen_dimensions.x + ((raw.x - graph_origin.x) / graph_increment) * x_increment;
     double screen_y = screen_dimensions.y + ((graph_origin.y - raw.y) / graph_increment) * y_increment;
     return sf::Vector2f(screen_x, screen_y);
 }
 
+sf::VertexArray Plot::plotAxis(){
+    // x-axis and y-axis
+    float x_axis_y_position = SCREEN_HEIGHT / 2.0f;
+    float y_axis_x_position = WORK_PANEL / 2.0f;
+    sf::Vector2f translated = translate(sf::Vector2f(0, 0));
+    // 2 points for each axis
+    sf::VertexArray grid_axis(sf::PrimitiveType::Lines, 4);
+    
+    // x-axis
+    
+    grid_axis[0].position = sf::Vector2f(0,translated.y);
+    grid_axis[0].color = sf::Color::White;
+    grid_axis[1].position = sf::Vector2f(WORK_PANEL, translated.y);
+    grid_axis[1].color = sf::Color::White;
 
+    // y-axis
+    
+    grid_axis[2].position = sf::Vector2f(translated.x, 0);
+    grid_axis[2].color = sf::Color::White;
+    grid_axis[3].position = sf::Vector2f(translated.x, SCREEN_HEIGHT);
+    grid_axis[3].color = sf::Color::White;
+
+    return grid_axis;
+
+}
