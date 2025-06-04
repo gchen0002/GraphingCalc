@@ -1,7 +1,11 @@
 #include "shunting_yard.h"
-#include "../token/operator.h"
-#include "../token/integer.h" 
+#include "../token/token.h"      
+#include "../token/integer.h"  
 #include "../token/variable.h" 
+#include "../token/operator.h" 
+#include "../token/function.h" 
+#include <stdexcept>          
+
 
 
 ShuntingYard::ShuntingYard() {}
@@ -21,31 +25,76 @@ Queue<Token*> ShuntingYard::postfix(const Queue<Token*>& infix_q) {
     MyStack<Token*> operator_stack;
 
     for (Queue<Token*>::Iterator it = infix_q.begin(); it != infix_q.end(); it++) {
-        Token* token = *it;
-        
-        if (token->type() == 1) { // Integer
-            output_queue.push(token);
+        Token* current_token = *it;
+        int token_type = current_token->type();
+
+        if (token_type == 1 || token_type == 5) { // INTEGER or VARIABLE
+            output_queue.push(current_token);
         } 
-        else if (token->type() == 5) { // Variable 
-            output_queue.push(token);
+        else if (token_type == 3 || token_type == 6) { // LEFT_PAREN or FUNCTION
+            operator_stack.push(current_token);
         } 
-        else if (token->type() == 2) { // Operator
-            Operator* current_op = static_cast<Operator*>(token);
-            while (!operator_stack.empty() && operator_stack.top()->type() == 2) {
-                Operator* top_op = static_cast<Operator*>(operator_stack.top());
-                if (top_op->precedence() >= current_op->precedence()) { // precedence check
-                    output_queue.push(operator_stack.pop());
-                } else {
-                    break;
-                }
+        else if (token_type == 4) { // RIGHT_PAREN
+            if (operator_stack.empty()) {
+                throw runtime_error("ShuntingYard Error: Mismatched parentheses - right parenthesis with empty stack.");
             }
-            operator_stack.push(token);
+            // pop from stack until left parenthesis is found
+            Token* temp = operator_stack.pop();
+            while (temp->type() != 3) {
+                output_queue.push(temp);
+                if (operator_stack.empty()) {
+                    throw runtime_error("ShuntingYard Error: Mismatched parentheses - no left parenthesis found.");
+                }
+                temp = operator_stack.pop();
+            }
+        } 
+        else if (token_type == 2) { // OPERATOR
+            Operator* current_op = static_cast<Operator*>(current_token);
+
+            // if the stack is empty, push the operator
+            if (operator_stack.empty()) {
+                operator_stack.push(current_token);
+            }
+            // if the top of the stack is a left parenthesis, push the operator
+            else if (operator_stack.top()->type() == 3) {
+                operator_stack.push(current_token);
+            } 
+            // if the top of the stack is a function, pop the function and push the operator
+            else if (operator_stack.top()->type() == 6) {
+                output_queue.push(operator_stack.pop());
+                operator_stack.push(current_token);
+            } 
+            // if the top of the stack is an operator
+            else if (operator_stack.top()->type() == 2) {
+                Operator* top_op = static_cast<Operator*>(operator_stack.top());
+                if (current_op->precedence() <= top_op->precedence()) {
+                    output_queue.push(operator_stack.pop());
+                    operator_stack.push(current_token);
+                } 
+                // if the current operator has higher precedence, push the operator
+                else { 
+                    operator_stack.push(current_token);
+                }
+            } 
+            // if the top of the stack is a function
+            else if (operator_stack.top()->type() == 6) {
+                operator_stack.push(current_token);
+            }
+            // if the top of the stack is a left parenthesis
+            else if (operator_stack.top()->type() == 3) {
+                operator_stack.push(current_token);
+            }
+        } 
+        else {
+            throw runtime_error("ShuntingYard Error: Unknown token type: " + to_string(token_type));
         }
     }
-    // clean up stack for left over operators
+
     while (!operator_stack.empty()) {
-        Token* token_on_stack = operator_stack.top();
-        assert(token_on_stack->type() == 2 && "ShuntingYard Error: Expected only operators on stack at the end.");
+        Token* top_token = operator_stack.top();
+        if (top_token->type() == 3 || top_token->type() == 4) {
+            throw runtime_error("ShuntingYard Error: Mismatched parentheses on stack at end.");
+        }
         output_queue.push(operator_stack.pop());
     }
 

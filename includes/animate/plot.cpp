@@ -3,37 +3,57 @@
 #include <vector>
 #include <cmath>
 #include <iostream>
-#include <cctype>      // For isdigit, isspace
+#include <cctype>      // For isdigit, isalpha, isspace
 
 
-// converts string to infix Queue<Token*>
-// needs to handle variables, trig later
 Queue<Token*> tokenizeExpression(const string& equation) {
     Queue<Token*> infix_queue;
-    // cout << "entering tokenize" << endl;
-    // cout << equation << "123123123" << endl;
+    
     for (int i = 0; i < equation.length(); i++) {
         char c = equation[i];
-        // cout << "looping" << endl;
-        if (isspace(c)) { // skip spaces
+
+        if (isspace(c)) { // Skip spaces
             continue;
-            // cout << "skipping spaces";
-        }
+        } 
+        else if (isdigit(c)) { // Number (integer)
+            string num_str;
+            num_str += c;
+            while (i + 1 < equation.length() && isdigit(equation[i+1])) {
+                num_str += equation[++i];
+            }
+            infix_queue.push(new Integer(stoi(num_str))); 
+        } 
+        else if (isalpha(c)) { // variable or function
+            string var_or_func;
+            var_or_func += c;
+            while (i + 1 < equation.length() && isalpha(equation[i+1])) {
+                var_or_func += equation[++i];
+            }
 
-        if (isdigit(c)) {
-            infix_queue.push(new Integer(c));
-            // cout << "isdigit" << endl; 
-        }
-        // operator case
-        else if (c == '+' || c == '-' || c == '*' || c == '/') {
-            infix_queue.push(new Operator(string(1, c))); 
-            // cout << "operators" << endl;
-        } else if (c == 'x') { // variable 'x'
-            infix_queue.push(new Variable(string(1, c)));
-        }
-
+            if (var_or_func == "x" || var_or_func == "X") {
+                infix_queue.push(new Variable(var_or_func));
+            } else if (var_or_func == "sin") {
+                infix_queue.push(new Function("sin", 1));
+            } else if (var_or_func == "cos") {
+                infix_queue.push(new Function("cos", 1));
+            } else if (var_or_func == "tan") {
+                infix_queue.push(new Function("tan", 1));
+            } else if (var_or_func == "pow") {
+                infix_queue.push(new Function("pow", 2));
+            } else if (var_or_func == "atan2") {
+                infix_queue.push(new Function("atan2", 2));
+            }
+        } 
+        else if (c == '+' || c == '-' || c == '*' || c == '/' || c == '^') { // Operators
+            infix_queue.push(new Operator(string(1, c)));
+        } 
+        else if (c == '(') { // Left Parenthesis
+            infix_queue.push(new Token(3)); 
+        } 
+        else if (c == ')') { // Right Parenthesis
+            infix_queue.push(new Token(4)); 
+        } 
     }
-    // cout << "TOKENIZE SUCCCESFFUL" << endl;
     return infix_queue;
 }
 
