@@ -8,6 +8,11 @@ animate::animate()
 {
     cout << "animate CTOR: TOP" << endl;
     system = System(graph_info);
+    sidebar[3] = "HISTORY";
+    for(int i = 4; i < graph_info->_history.size()+3; i++){
+        sidebar[i] = graph_info->_history[i-4];
+        cout << "ADDING TO HISTORY" << graph_info->_history[i-4] << endl;
+    }
     // SFML 3: VideoMode constructor takes sf::Vector2u or {unsigned int, unsigned int}
     window.create(sf::VideoMode({SCREEN_WIDTH, SCREEN_HEIGHT}), "SFML window!");
     // VideoMode class has functions to detect screen size etc.
@@ -141,6 +146,9 @@ void animate::processEvents()
             case sf::Keyboard::Key::Escape: // SFML 3: sf::Keyboard::Key::Escape
                 sidebar[SB_KEY_PRESSED] = "ESC: EXIT";
                 window.close();
+                break;
+            case sf::Keyboard::Key::Backspace:
+                
                 break;
             default:
                 break;

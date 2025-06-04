@@ -28,7 +28,7 @@ Sidebar::Sidebar(float left, float width)
     rect.setPosition(sf::Vector2f(left, 0));
     rect.setSize(sf::Vector2f(width, SCREEN_HEIGHT));
     cout << "Sidebar CTOR: about to load font." << endl;
-
+    
     ////- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     // the font file must be in the "working directory"
     //  check projects->run->working directory

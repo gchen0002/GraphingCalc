@@ -14,9 +14,11 @@ public:
     Sidebar(float left, float width);
     void draw(sf::RenderWindow& window);
     string& operator [](int index);
+    void buttonClicked();
 private:
     sf::RectangleShape rect;            //sidebar rectangle
     vector<string> items;               //strings to place on the sidebar
+    vector<sf::FloatRect> texts;
     sf::Font font;                      //used to draw text // Ensure declared before sb_text
     sf::Text sb_text;                   //used to draw strings on the window object
 
