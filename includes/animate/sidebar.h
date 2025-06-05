@@ -14,7 +14,7 @@ public:
     Sidebar(float left, float width);
     void draw(sf::RenderWindow& window);
     string& operator [](int index);
-    void buttonClicked();
+    int ButtonClicked(sf::Vector2f mouse_pos);
 private:
     sf::RectangleShape rect;            //sidebar rectangle
     vector<string> items;               //strings to place on the sidebar

@@ -65,36 +65,41 @@ Sidebar::Sidebar(float left, float width)
 
 void Sidebar::draw(sf::RenderWindow &window)
 {
-    const double VERTICAL_LINE_SPACING = 5.0;
-    const double LEFT_MARGIN = 10.0;
+    const float VERTICAL_LINE_SPACING = 5.0;
+    const float LEFT_MARGIN = 10.0;
 
     window.draw(rect);
-    float height = 10.f; // Use f for float literal
+    float height = 10.f; 
+    texts.clear(); // Clear the vector of bounding boxes
 
-    for (vector<string>::iterator it = items.begin();
-         it != items.end(); it++)
+    for (int i = 0; i < items.size(); i++) 
     {
-        bool blank = false;
-        if (it->length() == 0)
-        {
-            // empty rows must be taken into account (getLocalBounds())
-            //     but not drawn
-            blank = true;
-            sb_text.setString("BLANK");
-        }
-        else
-        {
-            sb_text.setString(it->c_str());
-        }
-        sb_text.setPosition(sf::Vector2f(_left + static_cast<float>(LEFT_MARGIN), height));
+        sb_text.setString(items[i].c_str());
+        sb_text.setPosition(sf::Vector2f(_left + LEFT_MARGIN, height));
+        
+        // Store the bounding box 
+        texts.push_back(sb_text.getGlobalBounds());
 
-        height += sb_text.getLocalBounds().size.y + static_cast<float>(VERTICAL_LINE_SPACING);
-        if (!blank)
-            window.draw(sb_text);
+        height += sb_text.getLocalBounds().size.y + VERTICAL_LINE_SPACING;
+        window.draw(sb_text);
     }
 }
 
 string &Sidebar::operator[](int index)
 {
     return items[index];
+}
+
+
+int Sidebar::ButtonClicked(sf::Vector2f mouse_pos)
+{
+    for (int i = 0; i < texts.size(); i++)
+    {
+        // Check if the item string is not empty and if the mouse click is within its bounds
+        if (!items[i].empty() && texts[i].contains(mouse_pos))
+        {
+            return i; // Return the index of the clicked item
+        }
+    }
+    return -1; // No button was clicked
 }

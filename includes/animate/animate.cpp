@@ -9,9 +9,11 @@ animate::animate()
     cout << "animate CTOR: TOP" << endl;
     system = System(graph_info);
     sidebar[3] = "HISTORY";
-    for(int i = 4; i < graph_info->_history.size()+3; i++){
-        sidebar[i] = graph_info->_history[i-4];
-        cout << "ADDING TO HISTORY" << graph_info->_history[i-4] << endl;
+    for(int i = 4; i < graph_info->_history.size() + 4; i++){
+        if ((i - 4) < graph_info->_history.size()) { 
+            sidebar[i] = graph_info->_history[i-4];
+            cout << "ADDING TO HISTORY SIDEBAR[" << i << "]: " << graph_info->_history[i-4] << endl;
+        }
     }
     // SFML 3: VideoMode constructor takes sf::Vector2u or {unsigned int, unsigned int}
     window.create(sf::VideoMode({SCREEN_WIDTH, SCREEN_HEIGHT}), "SFML window!");
@@ -128,23 +130,23 @@ void animate::processEvents()
             switch (keyPressed->code)
             {
             case sf::Keyboard::Key::Hyphen:
-                sidebar[SB_KEY_PRESSED] = "HYPHEN";
+                //sidebar[SB_KEY_PRESSED] = "HYPHEN";
                 command = 5;
                 break;
             case sf::Keyboard::Key::Equal:
-                sidebar[SB_KEY_PRESSED] = "ADD";
+                //sidebar[SB_KEY_PRESSED] = "ADD";
                 command = 6;
                 break;
             case sf::Keyboard::Key::Left: // SFML 3: sf::Keyboard::Key::Left
-                sidebar[SB_KEY_PRESSED] = "LEFT ARROW";
+                //sidebar[SB_KEY_PRESSED] = "LEFT ARROW";
                 command = 3;
                 break;
             case sf::Keyboard::Key::Right: // SFML 3: sf::Keyboard::Key::Right
-                sidebar[SB_KEY_PRESSED] = "RIGHT ARROW";
+                //sidebar[SB_KEY_PRESSED] = "RIGHT ARROW";
                 command = 4;
                 break;
             case sf::Keyboard::Key::Escape: // SFML 3: sf::Keyboard::Key::Escape
-                sidebar[SB_KEY_PRESSED] = "ESC: EXIT";
+                //sidebar[SB_KEY_PRESSED] = "ESC: EXIT";
                 window.close();
                 break;
             case sf::Keyboard::Key::Backspace:
@@ -172,13 +174,28 @@ void animate::processEvents()
         {
             if (mouseButton->button == sf::Mouse::Button::Right) // SFML 3: sf::Mouse::Button::Right
             {
-                sidebar[SB_MOUSE_CLICKED] = "RIGHT CLICK " +
-                                            mouse_pos_string(window);
+                //sidebar[SB_MOUSE_CLICKED] = "RIGHT CLICK " +
+                //                            mouse_pos_string(window);
             }
-            else // assuming other clicks are left, or check sf::Mouse::Button::Left
+            else if (mouseButton->button == sf::Mouse::Button::Left) // SFML 3: sf::Mouse::Button::Left
             {
-                sidebar[SB_MOUSE_CLICKED] = "LEFT CLICK " +
-                                            mouse_pos_string(window);
+                //sidebar[SB_MOUSE_CLICKED] = "LEFT CLICK " +
+                //                            mouse_pos_string(window);
+                // Get mouse position 
+                sf::Vector2f mouse_pos = window.mapPixelToCoords({mouseButton->position.x, mouseButton->position.y});
+
+                int clicked_item_index = sidebar.ButtonClicked(mouse_pos);
+
+                
+                if (clicked_item_index > 3)
+                {
+                    // Check if the clicked_item_index is valid for the history items
+                    int history_actual_index = clicked_item_index - 4;
+                    if (history_actual_index >= 0 && history_actual_index < graph_info->_history.size()){
+                        graph_info->_equation = sidebar[clicked_item_index]; 
+                        cout << "Sidebar: Loaded equation from history: " << graph_info->_equation << endl;
+                    }
+                }
             }
         }
 
