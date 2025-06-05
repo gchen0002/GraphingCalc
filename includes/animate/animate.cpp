@@ -149,9 +149,68 @@ void animate::processEvents()
                 //sidebar[SB_KEY_PRESSED] = "ESC: EXIT";
                 window.close();
                 break;
-            case sf::Keyboard::Key::Backspace:
-                
+            case sf::Keyboard::Key::Backspace: {
+                // shows simple textbox for text entry
+                std::string input_equation;
+                bool input_active = true;
+                sf::RectangleShape inputBox(sf::Vector2f(400, 50));
+                inputBox.setFillColor(sf::Color(50, 50, 50, 220));
+                inputBox.setOutlineColor(sf::Color::Green);
+                inputBox.setOutlineThickness(2.f);
+                inputBox.setPosition(sf::Vector2f(static_cast<float>(SCREEN_WIDTH - 400) / 2, static_cast<float>(SCREEN_HEIGHT - 50) / 2));
+
+                sf::Text inputText(font, "", 30);
+                inputText.setFillColor(sf::Color::White);
+                inputText.setPosition(sf::Vector2f(inputBox.getPosition().x + 10, inputBox.getPosition().y + 10));
+
+                // temp event loop for text input
+                while (input_active && window.isOpen()) {
+                    window.clear();
+                    Draw();
+                    window.draw(inputBox);
+
+                    inputText.setString(input_equation + "_");
+                    window.draw(inputText);
+                    window.display();
+
+                    if (auto optInputEvent = window.waitEvent()) {
+                        sf::Event inputEvent = *optInputEvent;
+
+                        if (const sf::Event::TextEntered *textEntered = inputEvent.getIf<sf::Event::TextEntered>()) {
+                            if (textEntered->unicode == 13) { // Enter key closes textbox & updates
+                                input_active = false;
+                                //check for empty input
+                                if(!input_equation.empty()){
+                                    graph_info->_equation = input_equation;
+                                    // check equation & adds to history.txt
+                                    graph_info->setHistory(); // update history.txt and _history
+                                    // for resetting domain back to -5, 5
+                                    graph_info->_domain = sf::Vector2f(-5, 5);
+                                    // Update sidebar history display
+                                    sidebar[3] = "HISTORY";
+                                    for (int i = 4; i < graph_info->_history.size() + 4; i++) {
+                                        if ((i - 4) < graph_info->_history.size()) {
+                                            sidebar[i] = graph_info->_history[i - 4];
+                                            cout << "ADDING TO HISTORY SIDEBAR[" << i << "]: " << graph_info->_history[i - 4] << endl;
+                                        }
+                                    }
+                                    sidebar[2] = "Equation: " + input_equation;
+                                }
+                                cout << "Equation entered: " << input_equation << endl;
+                            } else if (textEntered->unicode == 8) { // Backspace deleteing letters
+                                if (!input_equation.empty())
+                                    input_equation.pop_back();
+                            } else if (textEntered->unicode < 128 && textEntered->unicode >= 32) {
+                                input_equation += static_cast<char>(textEntered->unicode);
+                            }
+                        } else if (inputEvent.is<sf::Event::Closed>()) {
+                            window.close();
+                            input_active = false;
+                        }
+                    }
+                }
                 break;
+            }
             default:
                 break;
             }
@@ -193,6 +252,7 @@ void animate::processEvents()
                     int history_actual_index = clicked_item_index - 4;
                     if (history_actual_index >= 0 && history_actual_index < graph_info->_history.size()){
                         graph_info->_equation = sidebar[clicked_item_index]; 
+                        graph_info->_domain = sf::Vector2f(-5, 5);
                         cout << "Sidebar: Loaded equation from history: " << graph_info->_equation << endl;
                     }
                 }

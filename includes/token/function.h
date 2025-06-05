@@ -9,7 +9,6 @@
 #include <iostream>
 #include <cassert>
 
-
 class Function : public Token {
 private:
     std::string _func_name;
@@ -34,6 +33,13 @@ public:
             if (_func_name == "sin") return std::sin(arg);
             if (_func_name == "cos") return std::cos(arg);
             if (_func_name == "tan") return std::tan(arg);
+            if (_func_name == "csc") return (1.0/std::sin(arg));
+            if (_func_name == "sec") return (1.0/std::cos(arg));
+            if (_func_name == "cot") return (1.0/std::tan(arg));
+            if (_func_name == "arcsin") return (std::asin(arg));
+            if (_func_name == "arccos") return (std::acos(arg));
+            if (_func_name == "arctan") return (std::atan(arg));
+            if (_func_name == "pi") return (3.14159265358979323846);
         } else if (_args_count == 2) {
             double arg1 = args[0];
             double arg2 = args[1]; 

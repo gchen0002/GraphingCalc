@@ -11,7 +11,7 @@ using namespace std;
 struct Graph_Info{
         Graph_Info(){
             _window_dimensions = sf::Vector2f(SCREEN_WIDTH, SCREEN_HEIGHT);
-            _equation = "y = cos(x)";
+            _equation = "y = arccos(x)";
             _scale = sf::Vector2f(5, 5);
             _domain = sf::Vector2f(-5,5);
             setHistory();

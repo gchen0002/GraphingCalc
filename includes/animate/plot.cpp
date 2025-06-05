@@ -38,10 +38,24 @@ Queue<Token*> tokenizeExpression(const string& equation) {
                 infix_queue.push(new Function("cos", 1));
             } else if (var_or_func == "tan") {
                 infix_queue.push(new Function("tan", 1));
+            } else if (var_or_func == "csc") {
+                infix_queue.push(new Function("csc", 1));
+            } else if (var_or_func == "sec") {
+                infix_queue.push(new Function("sec", 1));
+            } else if (var_or_func == "cot") {
+                infix_queue.push(new Function("cot", 1));
+            } else if (var_or_func == "arcsin") {
+                infix_queue.push(new Function("arcsin", 1));
+            } else if (var_or_func == "arccos") {
+                infix_queue.push(new Function("arccos", 1));
+            } else if (var_or_func == "arctan") {
+                infix_queue.push(new Function("arctan", 1));
             } else if (var_or_func == "pow") {
                 infix_queue.push(new Function("pow", 2));
             } else if (var_or_func == "atan2") {
                 infix_queue.push(new Function("atan2", 2));
+            } else if (var_or_func == "pi"){
+                infix_queue.push(new Function("pi", 1));
             }
         } 
         else if (c == '+' || c == '-' || c == '*' || c == '/' || c == '^') { // Operators
