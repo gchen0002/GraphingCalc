@@ -55,7 +55,7 @@ Queue<Token*> tokenizeExpression(const string& equation) {
             } else if (var_or_func == "atan2") {
                 infix_queue.push(new Function("atan2", 2));
             } else if (var_or_func == "pi"){
-                infix_queue.push(new Function("pi", 1));
+                infix_queue.push(new Function("pi", 0));
             }
         } 
         else if (c == '+' || c == '-' || c == '*' || c == '/' || c == '^') { // Operators

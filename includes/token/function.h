@@ -28,7 +28,10 @@ public:
             throw runtime_error("Function '" + _func_name + "' called with " + std::to_string(args.size()) + " arguments, but expects " + std::to_string(_args_count));
         }
 
-        if (_args_count == 1) {
+        if (_args_count == 0) {
+            if (_func_name == "pi") return (3.14159265358979323846);
+        }
+        else if (_args_count == 1) {
             double arg = args[0];
             if (_func_name == "sin") return std::sin(arg);
             if (_func_name == "cos") return std::cos(arg);
@@ -39,7 +42,6 @@ public:
             if (_func_name == "arcsin") return (std::asin(arg));
             if (_func_name == "arccos") return (std::acos(arg));
             if (_func_name == "arctan") return (std::atan(arg));
-            if (_func_name == "pi") return (3.14159265358979323846);
         } else if (_args_count == 2) {
             double arg1 = args[0];
             double arg2 = args[1]; 
