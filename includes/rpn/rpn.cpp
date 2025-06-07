@@ -19,7 +19,7 @@ void RPN::set_input(const Queue<Token*>& postfix_q) {
 double RPN::operator()(double x_val) {
     MyStack<double> eval_stack;
 
-    for (Queue<Token*>::Iterator it = _postfix_q.begin(); it != _postfix_q.end(); ++it) {
+    for (Queue<Token*>::Iterator it = _postfix_q.begin(); it != _postfix_q.end(); it++) {
         Token* token = *it;
 
         if (token->type() == 1) { // INTEGER
@@ -29,11 +29,13 @@ double RPN::operator()(double x_val) {
         } else if (token->type() == 2) { // OPERATOR
             Operator* op = static_cast<Operator*>(token);
             if (op->is_unary()) {
+                // check if the stack is empty
                 if (eval_stack.empty()) throw runtime_error("RPN: not enoughoperands for unary op.");
                 double operand = eval_stack.pop();
                 if (op->get_operator() == "-") eval_stack.push(-operand);
                 else if (op->get_operator() == "+") eval_stack.push(operand);
             } else {
+                // check if the stack has at least 2 elements
                 if (eval_stack.size() < 2) throw runtime_error("RPN: not enough operands for binary op.");
                 double right = eval_stack.pop();
                 double left = eval_stack.pop();
@@ -43,6 +45,7 @@ double RPN::operator()(double x_val) {
                 else if (op_str == "-") eval_stack.push(left - right);
                 else if (op_str == "*") eval_stack.push(left * right);
                 else if (op_str == "/") {
+                    // check if the right operand is 0
                     if (right == 0) throw runtime_error("RPN: Division by zero.");
                     eval_stack.push(left / right);
                 }
@@ -55,7 +58,7 @@ double RPN::operator()(double x_val) {
             if (eval_stack.size() < num_args) throw runtime_error("RPN: not enough operands for function.");
             
             vector<double> args(num_args);
-            for (int i = num_args - 1; i >= 0; --i) {
+            for (int i = num_args - 1; i >= 0; i--) {
                 args[i] = eval_stack.pop();
             }
             eval_stack.push(func->evaluate(args));
