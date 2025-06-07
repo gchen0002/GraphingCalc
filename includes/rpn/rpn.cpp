@@ -1,7 +1,8 @@
 #include "rpn.h"
+#include "../token/token.h"
 #include "../token/integer.h"
-#include "../token/operator.h"
 #include "../token/variable.h"
+#include "../token/operator.h"
 #include "../token/function.h"
 #include <cassert>       
 #include <string>    
@@ -16,80 +17,51 @@ void RPN::set_input(const Queue<Token*>& postfix_q) {
 }
 
 double RPN::operator()(double x_val) {
-    // assert for preconditions
-    assert(!_postfix_q.empty() && "RPN Error: Input queue is empty.");
-
     MyStack<double> eval_stack;
 
+    for (Queue<Token*>::Iterator it = _postfix_q.begin(); it != _postfix_q.end(); ++it) {
+        Token* token = *it;
 
-    // Iterate over postfix queue
-    for (Queue<Token*>::Iterator it = _postfix_q.begin(); it != _postfix_q.end(); it++) {
-        Token* current_token = *it;
+        if (token->type() == 1) { // INTEGER
+            eval_stack.push(static_cast<Integer*>(token)->getValue());
+        } else if (token->type() == 5) { // VARIABLE
+            eval_stack.push(x_val);
+        } else if (token->type() == 2) { // OPERATOR
+            Operator* op = static_cast<Operator*>(token);
+            if (op->is_unary()) {
+                if (eval_stack.empty()) throw runtime_error("RPN: not enoughoperands for unary op.");
+                double operand = eval_stack.pop();
+                if (op->get_operator() == "-") eval_stack.push(-operand);
+                else if (op->get_operator() == "+") eval_stack.push(operand);
+            } else {
+                if (eval_stack.size() < 2) throw runtime_error("RPN: not enough operands for binary op.");
+                double right = eval_stack.pop();
+                double left = eval_stack.pop();
+                string op_str = op->get_operator();
 
-        if (current_token->type() == 1) { // Integer type
-            Integer* num_ptr = static_cast<Integer*>(current_token);
-            eval_stack.push(static_cast<double>(num_ptr->getValue()));
-        } 
-        else if (current_token->type() == 2) { // Operator type
-            Operator* op_ptr = static_cast<Operator*>(current_token);
-            string op_sym = op_ptr->getOp();
-
-            if (eval_stack.size() < 2) {
-                assert(false && "RPN Error: Insufficient operands for operator.");
-            }
-            
-            double right_operand = eval_stack.pop();
-            double left_operand = eval_stack.pop();
-            double result = 0.0;
-
-            if (op_sym == "+") result = left_operand + right_operand;
-            else if (op_sym == "-") result = left_operand - right_operand;
-            else if (op_sym == "*") result = left_operand * right_operand;
-            else if (op_sym == "/") {
-                if (std::abs(right_operand) < 1e-9) {  // check for division by zero
-                    assert(false && "RPN Error: Division by zero.");
+                if (op_str == "+") eval_stack.push(left + right);
+                else if (op_str == "-") eval_stack.push(left - right);
+                else if (op_str == "*") eval_stack.push(left * right);
+                else if (op_str == "/") {
+                    if (right == 0) throw runtime_error("RPN: Division by zero.");
+                    eval_stack.push(left / right);
                 }
-                result = left_operand / right_operand;
-            } else if (op_sym == "^") {
-                result = std::pow(left_operand, right_operand);
-            } else {
-                assert(false && "RPN Error: Unknown or unsupported operator.");
+                else if (op_str == "^") eval_stack.push(pow(left, right));
+                else throw runtime_error("RPN: Unknown binary operator.");
             }
-            eval_stack.push(result);
-        } else if (current_token->type() == 6) { // Function type
-            Function* func_ptr = static_cast<Function*>(current_token);
-            int num_args = func_ptr->get_num_args();
-
-            if (eval_stack.size() < num_args) {
-                assert(false && "RPN Error: Insufficient operands for function.");
-            }
-
-            vector<double> args_for_func;
-            args_for_func.resize(num_args);
-
-            for (int i = num_args - 1; i >= 0; i--) {
-                args_for_func[i] = eval_stack.pop();
-            }
+        } else if (token->type() == 6) { // FUNCTION
+            Function* func = static_cast<Function*>(token);
+            int num_args = func->get_num_args();
+            if (eval_stack.size() < num_args) throw runtime_error("RPN: not enough operands for function.");
             
-            double result = func_ptr->evaluate(args_for_func);
-            eval_stack.push(result);
-        } else if (current_token->type() == 5) { // Variable type ('x')
-            Variable* var_ptr = static_cast<Variable*>(current_token);
-            if (var_ptr->get_variable() == "x" || var_ptr->get_variable() == "X") { 
-                eval_stack.push(x_val);
-            } else {
-                assert(false && "RPN Error: Unknown variable name.");
+            vector<double> args(num_args);
+            for (int i = num_args - 1; i >= 0; --i) {
+                args[i] = eval_stack.pop();
             }
-        } else if (current_token->type() == 3 || current_token->type() == 4) {
-            assert(false && "RPN Error: Parenthesis token encountered in postfix queue.");
-        } else { // Catches any other token type need to implement trig functions later
-            assert(false && "RPN Error: Unexpected token type encountered in postfix queue.");
+            eval_stack.push(func->evaluate(args));
         }
     }
-    // invalid postfix expression
-    if (eval_stack.size() != 1) {
-        assert(false && "RPN Error: Invalid postfix expression. Stack did not end with 1 value.");
-    }
 
+    if (eval_stack.size() != 1) throw runtime_error("RPN: eval_stack size is not 1 at the end.");
     return eval_stack.top();
 } 

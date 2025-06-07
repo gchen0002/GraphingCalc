@@ -1,12 +1,9 @@
-y = sin(x)
-y = x
-y = cos(x)
-y = csc(x)
 y = arccos(x)
-y = x^2
-y = 3*x
-y = sin(1/cos(x))
-
-y = pi
-y = x*pi
-y = sin(pi)
+y = -x^2
+y = -x - (-cos(-sin(x)))
+y = -arctan(x)
+y = -sin(1/cos(x)) - arctan(x)
+y = -x^2 * -sin(x)
+y = sin(x) + cos(x)^2
+y = arctan(x)^2
+y = -x * arctan(csc(x))

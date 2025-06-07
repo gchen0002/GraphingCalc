@@ -23,6 +23,7 @@ Queue<Token*> ShuntingYard::postfix() {
 Queue<Token*> ShuntingYard::postfix(const Queue<Token*>& infix_q) {
     Queue<Token*> output_queue;
     MyStack<Token*> operator_stack;
+    Token* prev_token = nullptr;
 
     for (Queue<Token*>::Iterator it = infix_q.begin(); it != infix_q.end(); it++) {
         Token* current_token = *it;
@@ -50,6 +51,13 @@ Queue<Token*> ShuntingYard::postfix(const Queue<Token*>& infix_q) {
         } 
         else if (token_type == 2) { // OPERATOR
             Operator* current_op = static_cast<Operator*>(current_token);
+            
+            // Check for unary operator
+            if (current_op->get_operator() == "-" || current_op->get_operator() == "+") {
+                if (prev_token == nullptr || prev_token->type() == 2 || prev_token->type() == 3) {
+                    current_op->set_unary();
+                }
+            }
 
             // if the stack is empty, push the operator
             if (operator_stack.empty()) {
@@ -67,14 +75,10 @@ Queue<Token*> ShuntingYard::postfix(const Queue<Token*>& infix_q) {
             // if the top of the stack is an operator
             else if (operator_stack.top()->type() == 2) {
                 Operator* top_op = static_cast<Operator*>(operator_stack.top());
-                if (current_op->precedence() <= top_op->precedence()) {
+                if (current_op->precedence() < top_op->precedence() || (current_op->precedence() == top_op->precedence() && current_op->get_operator() != "^")) {
                     output_queue.push(operator_stack.pop());
-                    operator_stack.push(current_token);
-                } 
-                // if the current operator has higher precedence, push the operator
-                else { 
-                    operator_stack.push(current_token);
                 }
+                operator_stack.push(current_token);
             } 
             // if the top of the stack is a function
             else if (operator_stack.top()->type() == 6) {
@@ -88,6 +92,7 @@ Queue<Token*> ShuntingYard::postfix(const Queue<Token*>& infix_q) {
         else {
             throw runtime_error("ShuntingYard Error: Unknown token type: " + to_string(token_type));
         }
+        prev_token = current_token;
     }
 
     while (!operator_stack.empty()) {
