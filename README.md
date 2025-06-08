@@ -1,3 +1,5 @@
+# Gif
+![Function Graph](graphingcalc.gif)
 
 # Work Report
 
