@@ -4,7 +4,7 @@
 #include "system.h"
 
 animate::animate()
-    : font(), myTextLabel(font), sidebar(WORK_PANEL, SIDE_BAR), graph_info(new Graph_Info())
+    : font(), myTextLabel(font), sidebar(WORK_PANEL, SIDE_BAR), graph_info(new Graph_Info()), _show_help(false), _help_box(), _help_text(font)
 {
     cout << "animate CTOR: TOP" << endl;
     system = System(graph_info);
@@ -41,7 +41,27 @@ animate::animate()
     myTextLabel.setStyle(sf::Text::Style::Bold); // SFML 3: sf::Text::Style::Bold
     myTextLabel.setFillColor(sf::Color::Green);
     // sets domain text position
-    myTextLabel.setPosition(sf::Vector2f(10.f, SCREEN_HEIGHT - myTextLabel.getLocalBounds().size.y - 5.f));
+    myTextLabel.setPosition(sf::Vector2f(10.f, SCREEN_HEIGHT - 25.f));
+
+    // Prepare the help text
+    _help_box.setSize(sf::Vector2f(600, 300));
+    _help_box.setPosition(sf::Vector2f((WORK_PANEL - 600) / 2.0f, (SCREEN_HEIGHT - 300) / 2.0f));
+    _help_box.setFillColor(sf::Color(20, 20, 20, 230)); // Dark, semi-transparent
+    _help_box.setOutlineColor(sf::Color::White);
+    _help_box.setOutlineThickness(1);
+
+    // sets help text
+    string help_string = "Help Box\n\n";
+    help_string += "Enter any valid mathematical expression.\n\n";
+    help_string += "Use 'x' as variable.\n\n";
+    help_string += "Press '-' to zoom out and '+' to zoom in.\n\n";
+    help_string += "Press 'left arrow' to move left and 'right arrow' to move right.\n\n";
+    help_string += "Press F1 to close this help screen.";
+
+    _help_text = sf::Text(font, help_string, 20);
+    _help_text.setFillColor(sf::Color::White);
+    _help_text.setPosition(sf::Vector2f(_help_box.getPosition().x + 20, _help_box.getPosition().y + 20));
+
     cout << "animate instantiated successfully." << endl;
 }
 
@@ -80,6 +100,11 @@ void animate::render()
 {
     window.clear();
     Draw();
+    // If help is active, draw it on top
+    if (_show_help) {
+        window.draw(_help_box);
+        window.draw(_help_text);
+    }
     window.display();
 }
 
@@ -121,6 +146,9 @@ void animate::processEvents()
                 //sidebar[SB_KEY_PRESSED] = "ESC: EXIT";
                 window.close();
                 break;
+            case sf::Keyboard::Key::F1:
+                _show_help = !_show_help;
+                break;
             case sf::Keyboard::Key::Backspace: {
                 // shows simple textbox for text entry
                 std::string input_equation;
@@ -129,7 +157,7 @@ void animate::processEvents()
                 inputBox.setFillColor(sf::Color(50, 50, 50, 220));
                 inputBox.setOutlineColor(sf::Color::Green);
                 inputBox.setOutlineThickness(2.f);
-                inputBox.setPosition(sf::Vector2f(static_cast<float>(SCREEN_WIDTH - 400) / 2, static_cast<float>(SCREEN_HEIGHT - 50) / 2));
+                inputBox.setPosition(sf::Vector2f((SCREEN_WIDTH - 400) / 2, (SCREEN_HEIGHT - 50) / 2));
 
                 sf::Text inputText(font, "", 30);
                 inputText.setFillColor(sf::Color::White);
@@ -144,10 +172,10 @@ void animate::processEvents()
                     inputText.setString(input_equation + "_");
                     window.draw(inputText);
                     window.display();
-
+                    // wait for input event
                     if (auto optInputEvent = window.waitEvent()) {
-                        sf::Event inputEvent = *optInputEvent;
-
+                        sf::Event inputEvent = *optInputEvent; // get the event 
+                        // check if the event is a text entered event
                         if (const sf::Event::TextEntered *textEntered = inputEvent.getIf<sf::Event::TextEntered>()) {
                             if (textEntered->unicode == 13) { // Enter key closes textbox & updates
                                 input_active = false;

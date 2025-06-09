@@ -96,6 +96,10 @@ Vector<sf::Vector2f> Plot::operator()() {
     for (int i = 0; i < num_points; i++) {
         float x = xmin + i * increment;
         float y = rpn(x);
+        // check if the y is a number to handle division by 0
+        if (isnan(y)) {
+            continue; 
+        }
         plot_points.push_back(translate(sf::Vector2f(x, y)));
     }
     

@@ -13,3 +13,4 @@ y= x^3
 y= x^4
 y= sin(x) - cos(x)
 y = arccos(x) + arcsin(x) * -arcsin(x)
+y= 20/x

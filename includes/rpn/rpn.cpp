@@ -47,8 +47,11 @@ double RPN::operator()(double x_val) {
                 else if (op_str == "*") eval_stack.push(left * right);
                 else if (op_str == "/") {
                     // check if the right operand is 0
-                    if (right == 0) throw runtime_error("RPN: Division by zero.");
-                    eval_stack.push(left / right);
+                    if (right == 0) {
+                        eval_stack.push(NAN); // Return NAN to handle division by 0
+                    } else { // if the right operand is not 0, push the result to the stack
+                        eval_stack.push(left / right);
+                    }
                 } // if the operator is a power operator, push the result to the stack
                 else if (op_str == "^") eval_stack.push(pow(left, right));
                 else throw runtime_error("RPN: Unknown binary operator.");

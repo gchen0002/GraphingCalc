@@ -23,6 +23,9 @@ private:
     bool mouseIn;                       //mouse is in the screen
     Sidebar sidebar;                    //rectangular message sidebar
     Graph_Info* graph_info;
+    bool _show_help; // show help screen
+    sf::RectangleShape _help_box;
+    sf::Text _help_text;
 };
 
 std::string mouse_pos_string(sf::RenderWindow& window);
