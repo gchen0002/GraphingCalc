@@ -15,51 +15,32 @@ animate::animate()
             cout << "ADDING TO HISTORY SIDEBAR[" << i << "]: " << graph_info->_history[i-4] << endl;
         }
     }
-    // SFML 3: VideoMode constructor takes sf::Vector2u or {unsigned int, unsigned int}
+    // creates window
     window.create(sf::VideoMode({SCREEN_WIDTH, SCREEN_HEIGHT}), "SFML window!");
-    // VideoMode class has functions to detect screen size etc.
-    // RenderWindow constructor has a third argumnet to set style
-    // of the window: resize, fullscreen etc.
-
-    // System will be implemented to manage a vector of objects to be animated.
-    //   at that point, the constructor of the System class will take a vector
-    //   of objects created by the animate object.
-    //   animate will
-    // system = System(); // system is already default-constructed as a member
     window.setFramerateLimit(60);
 
     mouseIn = true;
 
-    mousePoint = sf::CircleShape(); // default constructed, then set properties
-    mousePoint.setRadius(5.0f);     // use f for float literal
+    // creates mouse point
+    mousePoint = sf::CircleShape();
+    mousePoint.setRadius(5.0f);
     mousePoint.setFillColor(sf::Color::Red);
 
-    cout << "Game CTOR. preparing to load the font." << endl; // Typo: Geme -> Game
-    //--- FONT ----------
-    // font file must be in the "working directory:
-    //      debug folder
-    // Make sure working directory is where it should be and not
-    //  inside the app file:
-    //  Project->RUN->Working Folder
-    //
-    // font must be a member of the class.
-    //  Will not work with a local declaration
-    if (!font.openFromFile("Roboto-Thin.ttf")) // SFML 3: openFromFile
+    // loads font
+    if (!font.openFromFile("Roboto-Thin.ttf"))
     {
         cout << "animate() CTOR: Font failed to load" << endl;
         cin.get();
         exit(-1);
     }
 
-    // myTextLabel is already constructed with font. now set its properties.
-    // myTextLabel = sf::Text("Initial String for myTextLabel", font); // This was assignment + wrong constructor
+    // sets domain text
     string text = "Domain = " + to_string(graph_info->_domain.x) + ", " + to_string(graph_info->_domain.y);
     myTextLabel.setString(text);
-    // myTextLabel.setFont(font); // Redundant, already constructed with font
     myTextLabel.setCharacterSize(20);
     myTextLabel.setStyle(sf::Text::Style::Bold); // SFML 3: sf::Text::Style::Bold
     myTextLabel.setFillColor(sf::Color::Green);
-    // assuming .height is correct for SFML 3. Use .f for float literals.
+    // sets domain text position
     myTextLabel.setPosition(sf::Vector2f(10.f, SCREEN_HEIGHT - myTextLabel.getLocalBounds().size.y - 5.f));
     cout << "animate instantiated successfully." << endl;
 }
@@ -73,18 +54,10 @@ void animate::Draw()
     }
 
     sidebar.draw(window);
-
-    //- - - - - - - - - - - - - - - - - - -
-    // getPosition() gives you screen coords, getPosition(window) gives you window coords
-    // cout<<"mosue pos: "<<sf::Mouse::getPosition(window).x<<", "<<sf::Mouse::getPosition(window).y<<endl;
-    //- - - - - - - - - - - - - - - - - - -
-
-    // drawing Test: . . . . . . . . . . . .
-    // This is how you draw text:)
+    // updates domain text
     string text = "Domain = " + to_string(graph_info->_domain.x) + ", " + to_string(graph_info->_domain.y);
     myTextLabel.setString(text);
     window.draw(myTextLabel);
-    //. . . . . . . . . . . . . . . . . . .
 }
 
 void animate::update()
@@ -95,7 +68,6 @@ void animate::update()
     if (mouseIn)
     {
         // mousePoint red dot:
-        // sf::Mouse::getPosition returns sf::Vector2i. setPosition prefers sf::Vector2f or float, float.
         sf::Vector2i mousePos = sf::Mouse::getPosition(window);
         mousePoint.setPosition({static_cast<float>(mousePos.x - 5),
                                static_cast<float>(mousePos.y - 5)});
@@ -215,16 +187,9 @@ void animate::processEvents()
                 break;
             }
         }
-        else if (event.is<sf::Event::MouseEntered>())
-        {
-            mouseIn = true;
-        }
-        else if (event.is<sf::Event::MouseLeft>())
-        {
-            mouseIn = false;
-        }
-        else if (const sf::Event::MouseMoved* mouseMoved = event.getIf<sf::Event::MouseMoved>())
-        {
+        else if (event.is<sf::Event::MouseEntered>()){ mouseIn = true;}
+        else if (event.is<sf::Event::MouseLeft>()){ mouseIn = false;}
+        else if (const sf::Event::MouseMoved* mouseMoved = event.getIf<sf::Event::MouseMoved>()){
             mouseX = static_cast<float>(mouseMoved->position.x); // position is sf::Vector2i
             mouseY = static_cast<float>(mouseMoved->position.y);
             // do something with it if you need to...

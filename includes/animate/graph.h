@@ -9,7 +9,7 @@ using namespace std;
 class Graph {
 public:
     Graph(){
-        //
+        // empty constructor
     }
     Graph(Graph_Info* info): _info(info), _plotter(info){
         //initialize your _poinnts vector from plot
