@@ -2,6 +2,7 @@
 #define CHEN_RPN_H
 #include "../queue/MyQueue.h" 
 #include "../stack/MyStack.h" 
+#include "../vector/vector_class.h"
 #include "../token/token.h"
 #include "../token/integer.h" 
 #include "../token/operator.h" 
@@ -9,7 +10,6 @@
 #include "../token/variable.h"
 #include <stdexcept> 
 #include <string>    
-#include <vector>    
 #include <cmath>     
 
 

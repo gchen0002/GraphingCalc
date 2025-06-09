@@ -3,7 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <string>
-#include <vector>
+#include "../vector/vector_class.h"
 using namespace std;
 
 
@@ -17,8 +17,8 @@ public:
     int ButtonClicked(sf::Vector2f mouse_pos);
 private:
     sf::RectangleShape rect;            //sidebar rectangle
-    vector<string> items;               //strings to place on the sidebar
-    vector<sf::FloatRect> texts;
+    Vector<string> items;               //strings to place on the sidebar
+    Vector<sf::FloatRect> texts;
     sf::Font font;                      //used to draw text // Ensure declared before sb_text
     sf::Text sb_text;                   //used to draw strings on the window object
 

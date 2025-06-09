@@ -6,7 +6,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include <vector>
+#include "../vector/vector_class.h"
 using namespace std;
 struct Graph_Info{
         Graph_Info(){
@@ -27,7 +27,7 @@ struct Graph_Info{
                 // open again
                 infile.open("history.txt"); 
             }
-            _history.clear(); // clear existing history before loading from file to prevent duplicates
+            _history.set_size(0); // clear existing history before loading from file to prevent duplicates
             string line;
             while(getline(infile, line)){
                 if (!line.empty()) { 
@@ -38,7 +38,8 @@ struct Graph_Info{
             
             // check if the current _equation is in _history
             bool found = false;
-            for (const string& eq : _history) {
+            for(int i = 0; i < _history.size(); i++){
+                string eq = _history[i];
                 if (eq == _equation) {
                     found = true;
                     break;
@@ -58,7 +59,7 @@ struct Graph_Info{
         string _equation;
         sf::Vector2f _window_dimensions, _scale, _domain;
         const float _points = 4000.0f;
-        vector<string> _history;
+        Vector<string> _history;
 };
 
 #endif

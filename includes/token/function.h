@@ -3,11 +3,11 @@
 
 #include "token.h"
 #include <string>
-#include <vector>
 #include <cmath>
 #include <stdexcept>
 #include <iostream>
 #include <cassert>
+#include "../vector/vector_class.h"
 
 class Function : public Token {
 private:
@@ -23,14 +23,14 @@ public:
     string get_name() const { return _func_name; }
 
     // Evaluates with already resolved double arguments from RPN
-    double evaluate(const vector<double>& args) const {
+    double evaluate(const Vector<double>& args) const {
         if (args.size() != _args_count) {
             throw runtime_error("Function '" + _func_name + "' called with " + std::to_string(args.size()) + " arguments, but expects " + std::to_string(_args_count));
         }
-
+        // pi
         if (_args_count == 0) {
             if (_func_name == "pi") return (3.14159265358979323846);
-        }
+        } // trig functions
         else if (_args_count == 1) {
             double arg = args[0];
             if (_func_name == "sin") return std::sin(arg);
@@ -42,7 +42,8 @@ public:
             if (_func_name == "arcsin") return (std::asin(arg));
             if (_func_name == "arccos") return (std::acos(arg));
             if (_func_name == "arctan") return (std::atan(arg));
-        } else if (_args_count == 2) {
+        } // power 
+        else if (_args_count == 2) {
             double arg1 = args[0];
             double arg2 = args[1]; 
             if (_func_name == "pow") {

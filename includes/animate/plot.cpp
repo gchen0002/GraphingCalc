@@ -1,12 +1,11 @@
 #include "plot.h"
 #include <string>
-#include <vector>
 #include <cmath>
 #include <iostream>
 #include <cctype>      // For isdigit, isalpha, isspace
 
 
-Queue<Token*> tokenizeExpression(const string& equation) {
+Queue<Token*> Plot::tokenizeExpression(const string& equation) {
     Queue<Token*> infix_queue;
     
     for (int i = 0; i < equation.length(); i++) {
@@ -29,7 +28,7 @@ Queue<Token*> tokenizeExpression(const string& equation) {
             while (i + 1 < equation.length() && isalpha(equation[i+1])) {
                 var_or_func += equation[++i];
             }
-
+            // check if the variable or function is a valid variable or function
             if (var_or_func == "x" || var_or_func == "X") {
                 infix_queue.push(new Variable(var_or_func));
             } else if (var_or_func == "sin") {
@@ -76,8 +75,8 @@ void Plot::set_info(Graph_Info* new_info) {
 }
 
 
-vector<sf::Vector2f> Plot::operator()() {
-    vector<sf::Vector2f> plot_points;
+Vector<sf::Vector2f> Plot::operator()() {
+    Vector<sf::Vector2f> plot_points;
     // tokenize the equation
     Queue<Token*> infix_q = tokenizeExpression(_info->_equation);
     

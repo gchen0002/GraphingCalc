@@ -168,7 +168,7 @@ void animate::processEvents()
                     window.clear();
                     Draw();
                     window.draw(inputBox);
-
+                    // add a _ to the input text to indicate that the input is active and which pos ur at
                     inputText.setString(input_equation + "_");
                     window.draw(inputText);
                     window.display();
@@ -242,10 +242,9 @@ void animate::processEvents()
                 //                            mouse_pos_string(window);
                 // Get mouse position 
                 sf::Vector2f mouse_pos = window.mapPixelToCoords({mouseButton->position.x, mouseButton->position.y});
-
+                // get the index of the clicked item based on the mouse position
                 int clicked_item_index = sidebar.ButtonClicked(mouse_pos);
-
-                
+                // if the clicked item is a history item, load the equation from the history
                 if (clicked_item_index > 3)
                 {
                     // Check if the clicked_item_index is valid for the history items

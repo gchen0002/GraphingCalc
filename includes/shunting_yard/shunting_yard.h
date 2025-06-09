@@ -4,6 +4,7 @@
 #include "../token/token.h"
 #include "../queue/MyQueue.h"
 #include "../stack/MyStack.h"
+#include "../vector/vector_class.h"
 
 class ShuntingYard {
 public:

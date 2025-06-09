@@ -39,7 +39,8 @@ void Graph::draw(sf::RenderTarget& target) {
     sf::CircleShape pointShape(1.0f); // Small circle for each point
     pointShape.setFillColor(sf::Color::Yellow);
 
-    for (const auto& point : _points) {
+    for (int i = 0; i < _points.size(); i++) {
+        sf::Vector2f point = _points[i];
         pointShape.setPosition(point); // Set position for each point
         target.draw(pointShape);
     }

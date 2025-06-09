@@ -2,9 +2,9 @@
 #define GRAPH_H
 
 #include <SFML/Graphics.hpp>
-#include <vector>
 #include "plot.h"
 #include "graph_info.h"
+#include "../vector/vector_class.h"
 using namespace std;
 class Graph {
 public:
@@ -21,7 +21,7 @@ public:
     void set_info();
 private:
     Graph_Info* _info;
-    vector<sf::Vector2f> _points;
+    Vector<sf::Vector2f> _points;
     Plot _plotter;
 };
 

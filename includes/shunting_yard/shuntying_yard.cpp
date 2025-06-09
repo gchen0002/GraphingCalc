@@ -91,10 +91,10 @@ Queue<Token*> ShuntingYard::postfix(const Queue<Token*>& infix_q) {
         } 
         else {
             throw runtime_error("ShuntingYard Error: Unknown token type: " + to_string(token_type));
-        }
+        } // update prev token
         prev_token = current_token;
     }
-
+    // check for empty stack & check if the top token is a left parenthesis or right parenthesis
     while (!operator_stack.empty()) {
         Token* top_token = operator_stack.top();
         if (top_token->type() == 3 || top_token->type() == 4) {

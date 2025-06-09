@@ -1,6 +1,6 @@
 #ifndef SYSTEM_H
 #define SYSTEM_H
-#include <vector>
+#include "../vector/vector_class.h"
 #include <SFML/Graphics.hpp>
 #include "graph.h"
 

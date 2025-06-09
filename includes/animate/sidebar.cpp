@@ -9,7 +9,7 @@ Sidebar::Sidebar()
     // it would likely need to load the font and set up 'rect' as well.
     // for now, this makes it compile by initializing sb_text.
     std::cout << "Sidebar Default CTOR: Minimal initialization." << std::endl;
-    items.reserve(50);
+    items.set_size(50);
 
     for (int i = 0; i < 30; i++)
     {
@@ -21,7 +21,7 @@ Sidebar::Sidebar(float left, float width)
     : font(), sb_text(font), _left(left), _width(width) // Initialize sb_text with font
 {
     cout << "Sidebar CTOR: TOP" << endl;
-    items.reserve(50);
+    items.set_size(50);
 
     // set up the sidebar rectangle:
     rect.setFillColor(sf::Color(105, 105, 105)); //(192,192,192)); //silver
@@ -54,7 +54,7 @@ Sidebar::Sidebar(float left, float width)
     ////this is how you would position text on screen:
     // sb_text.setPosition(sf::Vector2f(10, SCREEN_HEIGHT-sb_text.getLocalBounds().height-5));
 
-    items.push_back("sidebar sample text");
+
     // Fill the items vector with empty strings so that we can use [] to read them:
     for (int i = 0; i < 30; i++)
     {
@@ -70,7 +70,7 @@ void Sidebar::draw(sf::RenderWindow &window)
 
     window.draw(rect);
     float height = 10.f; 
-    texts.clear(); // Clear the vector of bounding boxes
+    texts.set_size(0); // Clear the vector of bounding boxes
 
     for (int i = 0; i < items.size(); i++) 
     {
@@ -79,7 +79,7 @@ void Sidebar::draw(sf::RenderWindow &window)
         
         // Store the bounding box 
         texts.push_back(sb_text.getGlobalBounds());
-
+        // add the height of the text to the height
         height += sb_text.getLocalBounds().size.y + VERTICAL_LINE_SPACING;
         window.draw(sb_text);
     }
@@ -90,7 +90,7 @@ string &Sidebar::operator[](int index)
     return items[index];
 }
 
-
+// returns the index of the clicked item, -1 if no item was clicked
 int Sidebar::ButtonClicked(sf::Vector2f mouse_pos)
 {
     for (int i = 0; i < texts.size(); i++)
