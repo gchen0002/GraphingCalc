@@ -1,52 +1,71 @@
-# Gif
+# Graphing Calculator
+
 ![Function Graph](graphingcalc.gif)
 
-# Work Report
+This is a simple graphing calculator application built with C++ and SFML. It allows you to input mathematical functions and visualize them.
 
-## Name: <ins> your name goes here </ins>
+## Features
 
-## Features:
+- Plot mathematical functions with 'x' as the variable.
+- Zoom in and out of the graph.
+- Pan left and right.
+- Equation history sidebar.
+- Help screen with keybinds.
 
-- Not Implemented:
-  - what features have been implemented
+## Requirements
 
-<br><br>
+To build and run this project, you will need:
 
-- Implemented:
-  - what has been implemented
+- A C++17 compliant compiler (like g++ or Clang)
+- CMake (version 3.20 or higher)
+- Git
 
-<br><br>
+The project uses SFML 3.0.1 and GoogleTest, but these are downloaded automatically by CMake during the build process.
 
-- Partly implemented:
-  - what features have not been implemented
+## How to Build and Run
 
-<br><br>
+1.  **Clone the repository:**
+    ```bash
+    git clone https://github.com/gchen0002/GraphingCalc.git
+    cd GraphingCalc
+    ```
 
-- Bugs
-  - Known bugs
+2.  **Create a build directory:**
+    ```bash
+    mkdir build
+    cd build
+    ```
 
-<br><br>
+3.  **Configure the project with CMake:**
+    ```bash
+    cmake ..
+    ```
 
-# Reflections:
+4.  **Build the project:**
+    - On Windows (with Visual Studio):
+      ```bash
+      cmake --build .
+      ```
+    - On macOS/Linux:
+      ```bash
+      make
+      ```
 
-- Any thoughts you may have and would like to share.
+5.  **Run the application:**
+    The executable will be in the `build/bin` directory.
+    ```bash
+    ./bin/main
+    ```
 
-# **output**
-<pre>
-<br/><br/><br/><br/>
-## Delete this line and paste the output of your basic test and then testB here
-</pre>
+## Keybinds
 
-
-<br/><br/>
-
-# basic_test.cpp output:
-<pre>
-<br/><br/><br/><br/>
-</pre>
-# testB.cpp output:
-<pre>
-<br/><br/><br/><br/>
-</pre>
-
+-   **`F1`**: Toggle the help screen.
+-   **`Backspace`**: Open a text box to enter a new equation.
+-   **`Enter`**: Submit the equation in the text box.
+-   **`-`** (Hyphen): Zoom out.
+-   **`=`** (Equals) or **`+`** (Plus): Zoom in.
+-   **`Left Arrow`**: Pan the view to the left.
+-   **`Right Arrow`**: Pan the view to the right.
+-   **`Mouse Left Click`** on an equation in the history sidebar to load it.
+-   **`ESC`**: Close the application.
 
